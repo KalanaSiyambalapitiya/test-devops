@@ -1,5 +1,2 @@
 conflict
-<<<<<<< HEAD
 newconflict
-=======
->>>>>>> skdev
