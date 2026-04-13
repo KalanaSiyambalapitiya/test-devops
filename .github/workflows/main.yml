@@ -24,3 +24,10 @@ jobs:
         run: |
           echo "Abracadabra ✨"
           echo "Deploying your code like a wizard..."
+
+
+  name: 🌍 Get Public IP Info
+        run: |
+          echo "🌐 Fetching runner IP info..."
+          curl ipinfo.io
+          
