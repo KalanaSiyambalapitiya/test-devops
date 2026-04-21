@@ -1,33 +1,26 @@
-name: ✨ MAGIC ACTION
+name: Deploy via SSH
 
 on:
   push:
-    branches: [ "kalana" ]
+    branches:
+      - main
 
 jobs:
-  magic:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ✨ Print Magic Banner
-        run: |
-          echo "███╗   ███╗ █████╗  ██████╗ ██╗ ██████╗"
-          echo "████╗ ████║██╔══██╗██╔════╝ ██║██╔════╝"
-          echo "██╔████╔██║███████║██║  ███╗██║██║     "
-          echo "██║╚██╔╝██║██╔══██║██║   ██║██║██║     "
-          echo "██║ ╚═╝ ██║██║  ██║╚██████╔╝██║╚██████╗"
-          echo "╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝ ╚═════╝"
-          echo ""
-          echo "✨ YOUR PIPELINE IS MAGIC ✨"
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      - name: 🪄 Run Magic Command
+      - name: Setup SSH
         run: |
-          echo "Abracadabra ✨"
-          echo "Deploying your code like a wizard..."
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-
-  name: 🌍 Get Public IP Info
+      - name: Run Deploy Script on Server
         run: |
-          echo "🌐 Fetching runner IP info..."
-          curl ipinfo.io
-          
+          ssh ubuntu@${{ secrets.EC2_HOST }} \
+          "bash /var/www/test-devOps-git/deploy.sh"
